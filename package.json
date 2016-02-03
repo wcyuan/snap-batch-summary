@@ -1,0 +1,13 @@
+{
+  "name": "snap-batch-summary",
+  "version": "0.0.1",
+  "description": "A horrible hack to batch download Snap project summaries",
+  "main": "main.js",
+  "dependencies": {
+    "selenium-webdriver": "^2.48.2"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "author": "Allie Jones <allie@alliejon.es>",
+  "license": "MIT"
+}
