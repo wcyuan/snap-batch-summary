@@ -17,6 +17,7 @@ function getNextSummary() {
   driver.sleep(5000);
 
   driver.executeScript(function() {
+    /* global world */
     var ide = world.children[0];
     ide.toggleAppMode();
     var summary;
@@ -24,11 +25,17 @@ function getNextSummary() {
       summary = { html: html, name: name };
     };
     ide.exportProjectSummary();
+    ide.saveFileAs = function (xml, _, name) {
+      summary.xml = xml;
+    };
+    ide.exportProject(ide.projectName, false);
     return summary;
   }).then(function(summary) {
     fs.writeFile("./"+summary.name+".html", summary.html, function() {
-      driver.quit();
-      if (projects.length) getNextSummary();
+      fs.writeFile("./"+summary.name+".xml", summary.xml, function() {
+        driver.quit();
+        if (projects.length) getNextSummary();
+      });
     });
   });
 }
