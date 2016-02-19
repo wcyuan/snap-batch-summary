@@ -10,14 +10,14 @@ If you want to run it all on the command line, you can use `xvfb`.  So the comma
 
 
 todo: 
-|x| Detect errors
-| | Create a summary from an xml file (all on disk)
-| | Get the list of files from:
-| | | a file on disk
-| |x| the command line
-| | | a url
-| | upload xml file to github
-| | | put files into subdirectories
-| | | if there is an error, remove the file.
-| | create a cron job that nightly downloads a set of projects and updates xml files in github.
+- [x] Detect errors
+- [ ] Create a summary from an xml file (all on disk) |
+- [ ] Get the list of files from:
+  - [ ] a file on disk
+  - [x] the command line
+  - [ ] a url
+- [ ] upload xml file to github
+  - [ ] put files into subdirectories
+  - [ ] if there is an error, remove the file.
+- [ ] create a cron job that nightly downloads a set of projects and updates xml files in github.
 
