@@ -2,18 +2,14 @@ var fs = require('fs');
 var webdriver = require('selenium-webdriver');
 var program = require('commander');
 
-var projects = [];
+program.parse(process.argv);
 
-program
- .arguments('<snap_url>*')
- .action(function(url) {
-   console.log('url: %s', url);
-   projects.push(url);
- })
- .parse(process.argv);
+var projects = program.args;
 
 if (projects.length == 0) {
   projects.push('http://snap.berkeley.edu/snapsource/snap.html#present:Username=alliejones&ProjectName=Snake');
+} else {
+  console.log("Urls: "+projects);
 }
 
 function getNextSummary() {
