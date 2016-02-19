@@ -1,25 +1,35 @@
 var fs = require('fs');
 var webdriver = require('selenium-webdriver');
+var program = require('commander');
 
-var projects = [
-    'http://snap.berkeley.edu/snapsource/snap.html#present:Username=alliejones&ProjectName=Snake',
-    'http://snap.berkeley.edu/snapsource/snap.html#present:Username=alliejones&ProjectName=Lab%202.5%20What%20Goes%20Up%20Solution',
-    'http://snap.berkeley.edu/snapsource/snap.html#present:Username=alliejones&ProjectName=Platformer%20Example'
-];
+var projects = [];
+
+program
+ .arguments('<snap_url>*')
+ .action(function(url) {
+   console.log('url: %s', url);
+   projects.push(url);
+ })
+ .parse(process.argv);
+
+if (projects.length == 0) {
+  projects.push('http://snap.berkeley.edu/snapsource/snap.html#present:Username=alliejones&ProjectName=Snake');
+}
 
 function getNextSummary() {
   var driver = new webdriver.Builder()
       .forBrowser('firefox')
       .build();
 
-  driver.get(projects.pop());
+  var url = projects.pop();
+  driver.get(url);
 
   driver.sleep(5000);
 
   driver.executeScript(function() {
     /* global world */
     var ide = world.children[0];
-    ide.toggleAppMode();
+    //ide.toggleAppMode();
     var summary;
     ide.saveFileAs = function (html, _, name) {
       summary = { html: html, name: name };
@@ -31,12 +41,18 @@ function getNextSummary() {
     ide.exportProject(ide.projectName, false);
     return summary;
   }).then(function(summary) {
-    fs.writeFile("./"+summary.name+".html", summary.html, function() {
-      fs.writeFile("./"+summary.name+".xml", summary.xml, function() {
-        driver.quit();
-        if (projects.length) getNextSummary();
+    if (summary.xml === undefined) {
+      console.log("Error fetching "+url);
+      driver.quit();
+      if (projects.length) getNextSummary();
+    } else {
+      fs.writeFile("./"+summary.name+".html", summary.html, function() {
+        fs.writeFile("./"+summary.name+".xml", summary.xml, function() {
+          driver.quit();
+          if (projects.length) getNextSummary();
+        });
       });
-    });
+    }
   });
 }
 
